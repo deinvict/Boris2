@@ -23,7 +23,7 @@
 //
 //This is achieved by updating the parameter output value (current_value) if the temperature changes.
 //1. For uniform temperature just call update(Temperature) whenever the uniform base temperature is changed
-//2. For non-uniform temperature the value must be updated in every computational cell before being used, using current_value = get(Temperature). 
+//2. For non-uniform temperature the value must be updated in every computational cell before being used, using current_value = get(Temperature).
 //This should be done by an external variadic template function if there are multiple parameters to update.
 
 template <typename PType, typename SType>
@@ -161,15 +161,15 @@ private:
 
 	//generate voronoi 2d tessellation with average spacing. Set coefficient values randomly in the given range only at the Voronoi cell boundaries (prng instantiated with given seed).
 	bool set_s_voronoiboundary2d(DBL3 h, Rect rect, DBL2 range, double spacing, int seed);
-	
+
 	//generate voronoi 3d tessellation with average spacing. Set coefficient values randomly in the given range only at the Voronoi cell boundaries (prng instantiated with given seed).
 	bool set_s_voronoiboundary3d(DBL3 h, Rect rect, DBL2 range, double spacing, int seed);
 
-	//generate voronoi 2d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell. 
+	//generate voronoi 2d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell.
 	//The rotation uses the values for polar (theta) and azimuthal (phi) angles specified in given ranges. prng instantiated with given seed.
 	bool set_s_voronoirotation2d(DBL3 h, Rect rect, DBL2 theta, DBL2 phi, double spacing, int seed);
 
-	//generate voronoi 3d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell. 
+	//generate voronoi 3d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell.
 	//The rotation uses the values for polar (theta) and azimuthal (phi) angles specified in given ranges. prng instantiated with given seed.
 	bool set_s_voronoirotation3d(DBL3 h, Rect rect, DBL2 theta, DBL2 phi, double spacing, int seed);
 
@@ -199,7 +199,7 @@ public:
 		current_value = value_at_0K;	//default to 0K value
 	}
 
-	//An assignment from a MatP to another must always have matched template parameters. 
+	//An assignment from a MatP to another must always have matched template parameters.
 	//Conversion when parameters are mismatched should not be used, but we need to define the conversion operator to use the copy_parameters method since the compiler sees such a conversion in the compilation tree as theoretically possible (so throws error)
 	template <typename PType_, typename SType_>
 	operator MatP<PType_, SType_>&() { return *(new MatP<PType_, SType_>()); }
@@ -210,7 +210,7 @@ public:
 
 	//---------Implement ProgramState method
 
-	void RepairObjectState(void) 
+	void RepairObjectState(void)
 	{
 		//this is needed so older simulation files show temperature dependence sensibly, otherwise they'll end up showing "none" when there is a temperature dependence set.
 		if (is_tdep()) {
@@ -353,10 +353,10 @@ public:
 
 	//---------Get Info (intended for console display)
 
-	//returns a std::string describing the set temperature dependence ("none", "array/filename" or set equation : "equation text") 
+	//returns a std::string describing the set temperature dependence ("none", "array/filename" or set equation : "equation text")
 	std::string get_info_string(void) const { return t_scaling_info; }
 
-	//returns a std::string describing the set spatial dependence ("none", "array" or set equation : "name parameters...") 
+	//returns a std::string describing the set spatial dependence ("none", "array" or set equation : "name parameters...")
 	std::string get_varinfo_string(void) const { return s_scaling_info; }
 
 	//does it have a temperature dependence?
@@ -377,7 +377,7 @@ public:
 
 	//---------Arithmetic operators
 
-	//the return type might not simply be PType! (e.g. PType is a DBL3, so '*' for DBL3 is a scalar product which results in a double). 
+	//the return type might not simply be PType! (e.g. PType is a DBL3, so '*' for DBL3 is a scalar product which results in a double).
 	//Need to tell the compiler exactly how to determine the return type. Similar problems may occur for the other arithmetic operators
 
 	//multiply with a MatP - '^' is used to signify vector product for VAL3
@@ -485,9 +485,9 @@ public:
 #if COMPILECUDA == 1
 	template <typename cu_obj_MatPCUDA_RType>
 	void set_p_cu_obj_mpcuda(cu_obj_MatPCUDA_RType* ptr) { p_cu_obj_mpcuda = ptr; }
-	
+
 	void null_p_cu_obj_mpcuda(void) { p_cu_obj_mpcuda = nullptr; }
-	
+
 	TEquationCUDA<cuBReal>& Tscaling_CUDAeq_ref(void) { return Tscaling_CUDAeq; }
 	TEquationCUDA<cuBReal, cuBReal, cuBReal, cuBReal>& Sscaling_CUDAeq_ref(void) { return Sscaling_CUDAeq; }
 #endif
@@ -519,7 +519,7 @@ MatP<PType, SType>& MatP<PType, SType>::operator=(const MatP<PType, SType>& copy
 	t_scaling_info = copy_this.t_scaling_info;
 
 	//copy any spatial scaling
-	
+
 	//s_scaling may be empty but copy_this.s_scaling not; in this case the following command doesn't have an effect, but this copy operator should be followed by an update function which will generate the required s_scaling (update_s_scaling called)
 	//Note, this copy is still needed here in case s_scaling and copy_this.s_scaling match in dimensions but have different values - update_s_scaling will skip if it sees matching dimensions.
 	s_scaling.copy_values(copy_this.s_scaling);
@@ -583,7 +583,7 @@ inline DBL2 MatP<DBL2, double>::get(double Temperature)
 
 		//component-by-component product if dual equation
 		if (Tscaling_eq.is_set_dual()) return (value_at_0K & Tscaling_eq.evaluate_dual(Temperature));
-		
+
 		//just constant multiplication for a scalar equation
 		else return value_at_0K * Tscaling_eq.evaluate(Temperature);
 	}
@@ -591,7 +591,7 @@ inline DBL2 MatP<DBL2, double>::get(double Temperature)
 
 		//use custom temperature scaling
 		int index = (int)floor_epsilon(Temperature);
-		
+
 		if (index + 1 < (int)t_scaling.size() && index >= 0) {
 
 			//use linear interpolation for temperature in range index to index + 1
@@ -620,7 +620,7 @@ inline DBL3 MatP<DBL3, double>::get(double Temperature)
 
 		//component-by-component product if vector equation
 		if (Tscaling_eq.is_set_vector()) return (value_at_0K & Tscaling_eq.evaluate_vector(Temperature));
-		
+
 		//just constant multiplication for a scalar equation
 		else return value_at_0K * Tscaling_eq.evaluate(Temperature);
 	}
@@ -789,7 +789,7 @@ inline double MatP<double, double>::get(const DBL3& position, double stime, doub
 	}
 	//no temperature dependence set
 	else {
-		
+
 		if (s_scaling_type == MATPVAR_EQUATION) return value_at_0K * Sscaling_eq.evaluate(position.x, position.y, position.z, stime);
 		else return value_at_0K * s_scaling[position];
 	}
@@ -863,7 +863,7 @@ inline DBL3 MatP<DBL3, double>::get(const DBL3& position, double stime, double T
 		if (index + 1 < (int)t_scaling.size() && index >= 0) {
 
 			//use linear interpolation for temperature in range index to index + 1
-			
+
 			//component-by-component product if vector equation
 			if (t_scaling_z.size()) return (value_at_0K & (DBL3(t_scaling[index], t_scaling_y[index], t_scaling_z[index]) * (double(index + 1) - Temperature) + DBL3(t_scaling[index + 1], t_scaling_y[index + 1], t_scaling_z[index + 1]) * (Temperature - double(index)))) * s;
 
@@ -982,7 +982,7 @@ void MatP<PType, SType>::set_t_scaling_equation(const std::string& equationText,
 
 	//set special function in Text equation (pre-calculated)
 	set_t_scaling_special_functions();
-	   	  
+
 	//clear scaling array - you either use scaling array method, or equation - or none - not both
 	t_scaling.clear();
 	t_scaling_y.clear();
@@ -1087,7 +1087,7 @@ void MatP<PType, SType>::set_t_scaling_special_functions(
 		}
 
 		if (pLongRelSus1 && pLongRelSus2) {
-			
+
 			Tscaling_eq.Set_SpecialFunction(EqComp::FUNC_LONGRELSUS1, pLongRelSus1);
 			Tscaling_eq.Set_SpecialFunction(EqComp::FUNC_LONGRELSUS2, pLongRelSus2);
 
@@ -1111,7 +1111,7 @@ void MatP<PType, SType>::set_t_scaling_special_functions(
 			if (pAlpha1_CUDA && pAlpha2_CUDA) {
 
 				Tscaling_CUDAeq.Set_SpecialFunction(EqComp::FUNC_ALPHA1, pAlpha1_CUDA);
-				Tscaling_CUDAeq.Set_SpecialFunction(EqComp::FUNC_ALPHA1, pAlpha2_CUDA);
+				Tscaling_CUDAeq.Set_SpecialFunction(EqComp::FUNC_ALPHA2, pAlpha2_CUDA);
 			}
 #endif
 		}
@@ -1289,7 +1289,7 @@ bool MatP<PType, SType>::set_t_scaling_array(std::vector<double> temp_arr, std::
 #if COMPILECUDA == 1
 	if (p_cu_obj_mpcuda) update_cuda_object();
 #endif
-	
+
 	return true;
 }
 
@@ -1707,7 +1707,7 @@ bool MatP<PType, SType>::set_s_custom(DBL3 h, Rect rect, double offset, double s
 {
 	if (GetFileTermination(fileName) != ".png")
 		fileName += ".png";
-	
+
 	if (!GetFilenameDirectory(fileName).length()) fileName = directory + fileName;
 
 	INT3 cells = round(rect / h);
@@ -2022,7 +2022,7 @@ bool MatP<PType, SType>::set_s_voronoiboundary3d(DBL3 h, Rect rect, DBL2 range, 
 	return success;
 }
 
-//generate voronoi 2d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell. 
+//generate voronoi 2d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell.
 //The rotation uses the values for polar (theta) and azimuthal (phi) angles specified in given ranges. prng instantiated with given seed.
 template <typename PType, typename SType>
 bool MatP<PType, SType>::set_s_voronoirotation2d(DBL3 h, Rect rect, DBL2 theta, DBL2 phi, double spacing, int seed)
@@ -2044,7 +2044,7 @@ bool MatP<PType, SType>::set_s_voronoirotation2d(DBL3 h, Rect rect, DBL2 theta, 
 	return success;
 }
 
-//generate voronoi 3d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell. 
+//generate voronoi 3d tessellation with average spacing. This method is applicable only to DBL3 PType, where a rotation operation is applied, fixed in each Voronoi cell.
 //The rotation uses the values for polar (theta) and azimuthal (phi) angles specified in given ranges. prng instantiated with given seed.
 template <typename PType, typename SType>
 bool MatP<PType, SType>::set_s_voronoirotation3d(DBL3 h, Rect rect, DBL2 theta, DBL2 phi, double spacing, int seed)
