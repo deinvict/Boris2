@@ -373,14 +373,14 @@ public:
 
 				double y = c * (tau1 * x.i + x.j * tau12);
 				double coth = (1 + exp(-2 * y)) / (1 - exp(-2 * y));
-				return ((1 - coth * coth) + 1 / (y*y));
+				if (fabs(y) < 1e-2) return 1.0 / 3 - y * y / 15 + 2 * pow(y, 4) / 189; /* series: the closed form cancels catastrophically for small y */ return ((1 - coth * coth) + 1 / (y*y));
 			};
 
 			std::function<double(DBL2)> B2diff = [&](DBL2 x) -> double {
 
 				double y = c * (tau2 * x.j + x.i * tau21);
 				double coth = (1 + exp(-2 * y)) / (1 - exp(-2 * y));
-				return ((1 - coth * coth) + 1 / (y*y));
+				if (fabs(y) < 1e-2) return 1.0 / 3 - y * y / 15 + 2 * pow(y, 4) / 189; /* series: the closed form cancels catastrophically for small y */ return ((1 - coth * coth) + 1 / (y*y));
 			};
 
 			DBL2 me = DBL2(me1_values[t_idx], me2_values[t_idx]);
@@ -430,14 +430,14 @@ public:
 
 				double y = c * (tau1 * x.i + x.j * tau12);
 				double coth = (1 + exp(-2 * y)) / (1 - exp(-2 * y));
-				return ((1 - coth * coth) + 1 / (y*y));
+				if (fabs(y) < 1e-2) return 1.0 / 3 - y * y / 15 + 2 * pow(y, 4) / 189; /* series: the closed form cancels catastrophically for small y */ return ((1 - coth * coth) + 1 / (y*y));
 			};
 
 			std::function<double(DBL2)> B2diff = [&](DBL2 x) -> double {
 
 				double y = c * (tau2 * x.j + x.i * tau21);
 				double coth = (1 + exp(-2 * y)) / (1 - exp(-2 * y));
-				return ((1 - coth * coth) + 1 / (y*y));
+				if (fabs(y) < 1e-2) return 1.0 / 3 - y * y / 15 + 2 * pow(y, 4) / 189; /* series: the closed form cancels catastrophically for small y */ return ((1 - coth * coth) + 1 / (y*y));
 			};
 
 			DBL2 me = DBL2(me1_values[t_idx], me2_values[t_idx]);
